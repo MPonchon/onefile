@@ -10,8 +10,10 @@ import java.nio.file.Path;
 
 
 public class Main {
+    public static String version = "v1.0.0";
     public static void main(String[] args) throws IOException {
-        System.out.printf("Hello and welcome!");
+        System.out.printf("Onefile " + version);
+        System.out.printf("args.length " + args.length);
         if (args.length != 4 ) {
             usage();
             return;
@@ -29,6 +31,11 @@ public class Main {
             System.err.println("Erreur: le chemin cible n'est pas un dossier: " + cheminCible);
         }
 
+        System.out.println("onefile ");
+        System.out.println("mainClass " + mainClass);
+        System.out.println("cheminDuDossier " + cheminDuDossier);
+        System.out.println("excludeImports " + excludeImports);
+        System.out.println("cheminCible " + cheminCible);
 //        String mainClass = "MergeFiles";
 //        String cheminDuDossier = LectureRepertoire.CHEMIN;
 //        String mainClass = "Main";
@@ -46,5 +53,6 @@ public class Main {
         sb.append("- chemin absolu du dossier a scanner");
         sb.append("- le nom de l'import a exclure exemple (org.codingame)");
         sb.append("- chemin absolu du dossier cible");
+        System.out.println(sb);
     }
 }
