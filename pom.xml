@@ -59,7 +59,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.codingame.Main</mainClass>
+                            <mainClass>org.yellowreindeer.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

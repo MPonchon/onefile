@@ -1,4 +1,4 @@
-package org.codingame.merge;
+package org.yellowreindeer.merge;
 
 import java.io.IOException;
 import java.nio.file.Files;

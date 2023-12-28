@@ -1,4 +1,4 @@
-package org.codingame.merge;
+package org.yellowreindeer.merge;
 
 
 import org.junit.jupiter.api.Test;

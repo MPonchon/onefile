@@ -1,7 +1,6 @@
-package org.codingame;
+package org.yellowreindeer;
 
-import org.codingame.merge.LectureRepertoire;
-import org.codingame.merge.MergeFiles;
+import org.yellowreindeer.merge.MergeFiles;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -51,7 +50,7 @@ public class Main {
         sb.append("Arguments obligatoires:");
         sb.append("- nom de la mainclass: exemple MergeFiles");
         sb.append("- chemin absolu du dossier a scanner");
-        sb.append("- le nom de l'import a exclure exemple (org.codingame)");
+        sb.append("- le nom de l'import a exclure exemple (org.yellowreindeer)");
         sb.append("- chemin absolu du dossier cible");
         System.out.println(sb);
     }

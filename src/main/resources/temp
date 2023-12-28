@@ -17,12 +17,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.codingame.merge.MergeFiles;
-import static org.codingame.merge.LectureRepertoire.CHEMIN;
+import org.yellowreindeer.merge.MergeFiles;
+import static org.yellowreindeer.merge.LectureRepertoire.CHEMIN;
 
 
 
-import org.codingame.merge.MergeFiles;
+import org.yellowreindeer.merge.MergeFiles;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,4 +34,4 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static org.codingame.merge.LectureRepertoire.CHEMIN;
+import static org.yellowreindeer.merge.LectureRepertoire.CHEMIN;
