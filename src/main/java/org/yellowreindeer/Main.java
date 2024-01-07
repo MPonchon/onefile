@@ -9,10 +9,9 @@ import java.nio.file.Path;
 
 
 public class Main {
-    public static String version = "v1.0.0";
+    public static String version = "v1.0.1";
     public static void main(String[] args) throws IOException {
-        System.out.printf("Onefile " + version);
-        System.out.printf("args.length " + args.length);
+        System.out.println("Onefile " + version);
         if (args.length != 4 ) {
             usage();
             return;
@@ -23,7 +22,7 @@ public class Main {
         String cheminCible = args[3];
         Path path = FileSystems.getDefault().getPath(cheminDuDossier);
         if (! Files.isDirectory(path)) {
-            System.err.println("Erreur: le chemin  sourcen'est pas un dossier: " + cheminDuDossier);
+            System.err.println("Erreur: le chemin  source n'est pas un dossier: " + cheminDuDossier);
         }
         path = FileSystems.getDefault().getPath(cheminCible);
         if (! Files.isDirectory(path)) {
