@@ -16,6 +16,9 @@ public class MergeFiles {
     public String pathToWrite;
     public String excludeImports;
 
+//    public static String REGEX_CLASS = "\\s*public\\s+(class|enum)\\s+(\\w+<*\\w+>*)\\s+(.*)";
+    public static String REGEX_CLASS = " *public +(class|enum) +(\\w+<?\\w+,* *\\w*>?)( +.*)";
+
 
     private List<Path> files;
 
@@ -27,37 +30,24 @@ public class MergeFiles {
         this.excludeImports = excludeImports;
     }
 
+    public static String removePublic(String line, Pattern patternPublicClass) {
+        Matcher matcherPublicClass = patternPublicClass.matcher(line);
+        if (matcherPublicClass.matches()) {
+            String classOrEnum = matcherPublicClass.group(1);
+            String className = matcherPublicClass.group(2);
+            String reste = matcherPublicClass.group(3);
+            return "%s %s%s".formatted(classOrEnum, className, reste);
+        } else {
+            return line;
+        }
+    }
+
     public void loadFiles () throws IOException {
         files = LectureRepertoire.getFilePaths(pathRoot, mainClass+EXT);
         List<String> imports = new ArrayList<>();
         List<String> codeLines = new ArrayList<>();
         for(Path path: files) {
-            List<String> lines  = LectureRepertoire.readFile(path);
-            Map<Boolean, List<String>> depAndSrc = dependenciesAndSourceCode(lines);
-            // imports
-            // retirer les imports du package mainclass
-            // charger le fichier mainclass, trouver tous les packages,
-            imports.addAll(depAndSrc.get(true));
-
-            // code
-            String regex = "\\s*public\\s+class\\s+(\\w+)\\s+(.*)";
-            Pattern patternPublicClass = Pattern.compile(regex);
-            List<String> srcLines = depAndSrc.get(false).stream()
-                    .filter(s -> !s.isEmpty())
-                    .map( s -> {
-                        Matcher matcherPublicClass = patternPublicClass.matcher(s);
-                        if (matcherPublicClass.matches()) {
-                            String className = matcherPublicClass.group(1);
-                            String reste = matcherPublicClass.group(2);
-                            return "class %s %s".formatted(className, reste);
-                        } else {
-                            return s;
-                        }
-                    })
-                    .map(s -> s.replaceAll(mainClass,mainClass+EXT))
-                    .toList();
-
-            codeLines.addAll(srcLines);
+            processFile(path, imports, codeLines);
         }
         Set<String> uniqueImport = new HashSet<>(imports);
         imports = new ArrayList<>(uniqueImport);
@@ -73,6 +63,22 @@ public class MergeFiles {
         }
         LectureRepertoire.writeFile(pathToWrite, imports, true);
         LectureRepertoire.writeFile(pathToWrite, codeLines, false);
+    }
+
+    public void processFile(Path path, List<String> imports, List<String> codeLines) throws IOException {
+        List<String> lines  = LectureRepertoire.readFile(path);
+        Map<Boolean, List<String>> depAndSrc = dependenciesAndSourceCode(lines);
+        // imports
+        // retirer les imports du package mainclass
+        // charger le fichier mainclass, trouver tous les packages,
+        imports.addAll(depAndSrc.get(true));
+        Pattern patternPublicClass = Pattern.compile(REGEX_CLASS);
+        List<String> srcLines = depAndSrc.get(false).stream()
+                .filter(s -> !s.isEmpty())
+                .map(s -> removePublic(s, patternPublicClass))
+                .map(s -> s.replaceAll(mainClass,mainClass+EXT))
+                .toList();
+        codeLines.addAll(srcLines);
     }
 
     public Map<Boolean, List<String>> dependenciesAndSourceCode(List<String> lines) {
