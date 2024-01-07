@@ -10,7 +10,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class MergeFiles {
-    public static String EXT = "Onefile";
+//    public static String EXT = "";
+//    public static String EXT = "Onefile";
     public String pathRoot;
     public String mainClass;
     public String pathToWrite;
@@ -25,8 +26,8 @@ public class MergeFiles {
     public MergeFiles(String mainClass, String path, String excludeImports, String cheminCible) {
         this.mainClass  = mainClass ;
         this.pathRoot = path;
-        Path directory = Paths.get(pathRoot);
-        pathToWrite = String.valueOf(Paths.get(cheminCible).resolve(this.mainClass + EXT +".java"));
+        pathToWrite = String.valueOf(Paths.get(cheminCible).resolve(this.mainClass  +".java"));
+//        pathToWrite = String.valueOf(Paths.get(cheminCible).resolve(this.mainClass + EXT +".java"));
         this.excludeImports = excludeImports;
     }
 
@@ -43,7 +44,8 @@ public class MergeFiles {
     }
 
     public void loadFiles () throws IOException {
-        files = LectureRepertoire.getFilePaths(pathRoot, mainClass+EXT);
+        files = LectureRepertoire.getFilePaths(pathRoot, mainClass);
+//        files = LectureRepertoire.getFilePaths(pathRoot, mainClass+EXT);
         List<String> imports = new ArrayList<>();
         List<String> codeLines = new ArrayList<>();
         for(Path path: files) {
@@ -76,7 +78,7 @@ public class MergeFiles {
         List<String> srcLines = depAndSrc.get(false).stream()
                 .filter(s -> !s.isEmpty())
                 .map(s -> removePublic(s, patternPublicClass))
-                .map(s -> s.replaceAll(mainClass,mainClass+EXT))
+//                .map(s -> s.replaceAll(mainClass,mainClass+EXT))
                 .toList();
         codeLines.addAll(srcLines);
     }
@@ -91,7 +93,6 @@ public class MergeFiles {
 
 
     public static boolean isLineKept(String line, String excludeImports) {
-//        System.out.println("line "+ line + " excludeImports " + excludeImports);
         if (excludeImports.isEmpty()) { return true; }
         return !line.contains(excludeImports);
     } 

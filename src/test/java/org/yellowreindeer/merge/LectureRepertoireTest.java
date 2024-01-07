@@ -7,11 +7,12 @@ import java.util.List;
 
 class LectureRepertoireTest {
 
-    static String CHEMIN = "/home/marc/mesprogs/codingGame/one_file/onefilejava/onefile/src/main/java/";
+    static final String PROJECT_DIR = System.getProperty("user.dir");
+    static String CHEMIN = PROJECT_DIR+ "/src/main/java/";
 
     @Test
     void getFilePaths() {
-        List<Path>  p = LectureRepertoire.getFilePaths(CHEMIN, "MergeFilesOneFile");
+        List<Path>  p = LectureRepertoire.getFilePaths(CHEMIN, "MergeFiles");
         System.out.println("p " + p);
     }
 }

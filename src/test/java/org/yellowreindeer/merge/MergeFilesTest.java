@@ -12,8 +12,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MergeFilesTest {
 
-    static String CHEMIN = "/home/marc/mesprogs/codingGame/one_file/onefilejava/onefile/src/main/java";
-    static String CIBLE = "/home/marc/mesprogs/codingGame/one_file/onefilejava/onefile/dist";
+    static final String PROJECT_DIR = System.getProperty("user.dir");
+    static final String CHEMIN = PROJECT_DIR+ "/src/main/java/";
+    static final String CIBLE = PROJECT_DIR + "/dist";
 
     @Test
     void dependenciesAndSourceCode_excludeImport_Empty() throws IOException {

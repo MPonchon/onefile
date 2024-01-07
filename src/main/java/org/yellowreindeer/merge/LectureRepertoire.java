@@ -1,32 +1,27 @@
 package org.yellowreindeer.merge;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class LectureRepertoire {
 
-    public static String CHEMIN = "/home/marc/mesprogs/codingGame/one_file/onefilejava/onefile/src/main/java/";
+    public static String CHEMIN = "/home/marc/mesprogs/codingGame/java/onefile/src/main/java";
     public static void main(String[] args) {
-        List<Path> files = getFilePaths(CHEMIN, "MergeFilesOnefile");
+        List<Path> files = getFilePaths(CHEMIN, "MergeFiles");
         System.out.println(files);
     }
 
     public static List<Path> getFilePaths(String chemin, String mainClassOneFile) {
-        List<Path> fileList = null;
-        Path repertoirePath = Paths.get(chemin);
-        try {
-            fileList = Files.walk(repertoirePath, Integer.MAX_VALUE)
-                    .filter(Files::isRegularFile)
-                    .filter( s -> s.toString().endsWith(".java"))
-                    .filter( s -> !s.toString().endsWith(MergeFiles.EXT + ".java"))
-                    .toList();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return fileList;
+        final String[] extentions = new String[]{"java"};
+        File directory = new File(chemin);
+        return FileUtils.listFiles(directory, extentions , true).stream()
+                .filter(File::isFile)
+                .map(File::toPath)
+                .toList();
     }
 
     public static List<String> readFile(Path filePath) throws IOException {
