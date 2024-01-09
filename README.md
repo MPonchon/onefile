@@ -29,9 +29,16 @@ Then in your project build with maven, add this code to your pom.xml:
 </plugins>
 </build>
 ```
+### Script setup
+You have to setup 4 parameters: 
+- mainClass: the main class of your project
+- main_path: the starting path pour discover the file's project
+- excludeImport: the package you dont want (i.e. org.mycompanie )
+- out_dir: the directory where your file will lie.
 
 ## How to run  it ?
 
 It will launch the script by default at ***package*** phase and then create one single java file in the **dist** directory.  
 
 You can change the phase at you convenience in the code above.
+
