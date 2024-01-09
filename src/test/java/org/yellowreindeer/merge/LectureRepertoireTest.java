@@ -12,7 +12,7 @@ class LectureRepertoireTest {
 
     @Test
     void getFilePaths() {
-        List<Path>  p = LectureRepertoire.getFilePaths(CHEMIN, "MergeFiles");
+        List<Path>  p = LectureRepertoire.getFilePaths(CHEMIN);
         System.out.println("p " + p);
     }
 }

@@ -10,16 +10,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class MergeFiles {
-//    public static String EXT = "";
-//    public static String EXT = "Onefile";
     public String pathRoot;
     public String mainClass;
     public String pathToWrite;
     public String excludeImports;
 
-//    public static String REGEX_CLASS = "\\s*public\\s+(class|enum)\\s+(\\w+<*\\w+>*)\\s+(.*)";
     public static String REGEX_CLASS = " *public +(class|enum) +(\\w+<?\\w+,* *\\w*>?)( +.*)";
-
 
     private List<Path> files;
 
@@ -27,7 +23,6 @@ public class MergeFiles {
         this.mainClass  = mainClass ;
         this.pathRoot = path;
         pathToWrite = String.valueOf(Paths.get(cheminCible).resolve(this.mainClass  +".java"));
-//        pathToWrite = String.valueOf(Paths.get(cheminCible).resolve(this.mainClass + EXT +".java"));
         this.excludeImports = excludeImports;
     }
 
@@ -44,8 +39,7 @@ public class MergeFiles {
     }
 
     public void loadFiles () throws IOException {
-        files = LectureRepertoire.getFilePaths(pathRoot, mainClass);
-//        files = LectureRepertoire.getFilePaths(pathRoot, mainClass+EXT);
+        files = LectureRepertoire.getFilePaths(pathRoot);
         List<String> imports = new ArrayList<>();
         List<String> codeLines = new ArrayList<>();
         for(Path path: files) {
@@ -65,6 +59,7 @@ public class MergeFiles {
         }
         LectureRepertoire.writeFile(pathToWrite, imports, true);
         LectureRepertoire.writeFile(pathToWrite, codeLines, false);
+        System.out.println("traitement terminé: " + pathToWrite);
     }
 
     public void processFile(Path path, List<String> imports, List<String> codeLines) throws IOException {
@@ -78,7 +73,6 @@ public class MergeFiles {
         List<String> srcLines = depAndSrc.get(false).stream()
                 .filter(s -> !s.isEmpty())
                 .map(s -> removePublic(s, patternPublicClass))
-//                .map(s -> s.replaceAll(mainClass,mainClass+EXT))
                 .toList();
         codeLines.addAll(srcLines);
     }

@@ -11,11 +11,11 @@ public class LectureRepertoire {
 
     public static String CHEMIN = "/home/marc/mesprogs/codingGame/java/onefile/src/main/java";
     public static void main(String[] args) {
-        List<Path> files = getFilePaths(CHEMIN, "MergeFiles");
+        List<Path> files = getFilePaths(CHEMIN);
         System.out.println(files);
     }
 
-    public static List<Path> getFilePaths(String chemin, String mainClassOneFile) {
+    public static List<Path> getFilePaths(String chemin) {
         final String[] extentions = new String[]{"java"};
         File directory = new File(chemin);
         return FileUtils.listFiles(directory, extentions , true).stream()
