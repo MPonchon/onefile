@@ -6,9 +6,10 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MergeFilesTest {
 
@@ -19,16 +20,18 @@ class MergeFilesTest {
     @Test
     void dependenciesAndSourceCode_excludeImport_Empty() throws IOException {
 
-        MergeFiles mf = new MergeFiles("MergeFiles", CHEMIN, "", CIBLE);
+        MergeFiles mf = new MergeFiles("MergeFiles", CHEMIN, "", CIBLE, "");
         mf.loadFiles();
     }
 
     @Test
     void dependenciesAndSourceCode_with_excludeImport_not_empty() {
         //Given
-        MergeFiles mf = new MergeFiles("MergeFiles", CHEMIN, "org.coding", CIBLE);
+        String excludes = "org.coding,org.yellow";
+        MergeFiles mf = new MergeFiles("MergeFiles", CHEMIN, excludes, CIBLE, "");
         List<String> lines = List.of(
                 "import org.coding.toto",
+                "import org.yellow.toto",
                 "package org.coding.mm",
                 "class Merge {",
                 "import java.util.*"
@@ -42,7 +45,7 @@ class MergeFilesTest {
     @Test
     void dependenciesAndSourceCode_with_excludeImport_Empty() {
         //Given
-        MergeFiles mf = new MergeFiles("MergeFiles", CHEMIN, "", CIBLE);
+        MergeFiles mf = new MergeFiles("MergeFiles", CHEMIN, ",", CIBLE, "");
         List<String> lines = List.of(
                 "import org.coding.toto",
                 "package org.coding.mm",
@@ -73,5 +76,45 @@ class MergeFilesTest {
         result = MergeFiles.removePublic(line, patternPublicClass);
         //Then
         assertEquals("class Toto<T , R>{", result);
+    }
+
+    @Test
+    void isImportKept_does_not_keep_exclude_import() {
+        // given
+        Set<String> excludes = Set.of("org.toto", "org.titi");
+        String line = "import org.toto.voila";
+        //Then
+        assertFalse(MergeFiles.isImportKept(line, excludes));
+
+        // given
+        line = "import org.titi.voila";
+        //Then
+        assertFalse(MergeFiles.isImportKept(line, excludes));
+
+        // given
+        line = "import org.tata.voila";
+        //Then
+        assertTrue(MergeFiles.isImportKept(line, excludes));
+
+    }
+
+    @Test
+    void isLineKept_does_not_keep_exclude_lines() {
+        // given
+        Set<String> excludes = Set.of("Logger logger", "logger = new Logger");
+        String line = "Logger logger";
+        //Then
+        assertFalse(MergeFiles.isLineKept(line, excludes));
+
+        // given
+        line = "logger";
+        //Then
+        assertTrue(MergeFiles.isLineKept(line, excludes));
+
+        // given
+        line = "logger = new Logger";
+        //Then
+        assertFalse(MergeFiles.isLineKept(line, excludes));
+
     }
 }

@@ -13,6 +13,7 @@ public class Launch {
     String cheminDuDossier;
     String excludeImports;
     String cheminCible;
+    String excludeLines;
 
     public void run() throws IOException {
         String version = "unknown";
@@ -23,18 +24,23 @@ public class Launch {
         }
         System.out.println("Onefile version: %s".formatted(version));
         showParams();
-        MergeFiles mf = new MergeFiles(mainClass, cheminDuDossier, excludeImports, cheminCible);
+        MergeFiles mf = new MergeFiles(mainClass, cheminDuDossier, excludeImports, cheminCible, excludeLines);
         mf.loadFiles();
     }
 
     public boolean checkParams(String[] args) {
-        if (args.length != 4) {
+        if (args.length != Main.NB_PARAMS) {
+            System.err.println("Erreur: il n'y a que "+ args.length + " parametres sur " + Main.NB_PARAMS);
+            for(String param: args) {
+                System.err.println("- " + param);
+            }
             return false;
         }
         mainClass = args[0];
         cheminDuDossier = args[1];
         excludeImports = args[2];
         cheminCible = args[3];
+        excludeLines = args[4];
         Path path = FileSystems.getDefault().getPath(cheminDuDossier);
         if (!Files.isDirectory(path)) {
             System.err.println("Erreur: le chemin  source n'est pas un dossier: " + cheminDuDossier);
@@ -55,6 +61,7 @@ public class Launch {
         System.out.println("cheminDuDossier: " + cheminDuDossier);
         System.out.println("excludeImports: " + excludeImports);
         System.out.println("cheminCible: " + cheminCible);
+        System.out.println("excludeLines: " + excludeLines);
         System.out.println("-----------------------");
     }
 

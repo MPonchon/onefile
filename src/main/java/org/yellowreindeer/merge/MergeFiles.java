@@ -13,17 +13,25 @@ public class MergeFiles {
     public String pathRoot;
     public String mainClass;
     public String pathToWrite;
-    public String excludeImports;
+    public Set<String> excludeImports;
+    public Set<String> excludeLines;
 
-    public static String REGEX_CLASS = " *public +(class|enum) +(\\w+<?\\w+,* *\\w*>?)( +.*)";
+    public static String REGEX_CLASS = " *public +(class|enum|interface) +(\\w+<?\\w+,* *\\w*>?)( +.*)";
+
 
     private List<Path> files;
 
-    public MergeFiles(String mainClass, String path, String excludeImports, String cheminCible) {
+    public MergeFiles(String mainClass, String path, String excludeImportsIn, String cheminCible, String excludeLinesIn) {
         this.mainClass  = mainClass ;
         this.pathRoot = path;
         pathToWrite = String.valueOf(Paths.get(cheminCible).resolve(this.mainClass  +".java"));
-        this.excludeImports = excludeImports;
+        this.excludeImports = new HashSet<>();
+        String[] excludes = excludeImportsIn.split(", *");
+        Collections.addAll(this.excludeImports, excludes);
+        this.excludeLines = new HashSet<>();
+        excludes = excludeLinesIn.split(", *");
+        Collections.addAll(this.excludeLines, excludes);
+
     }
 
     public static String removePublic(String line, Pattern patternPublicClass) {
@@ -80,16 +88,31 @@ public class MergeFiles {
     public Map<Boolean, List<String>> dependenciesAndSourceCode(List<String> lines) {
         return lines.stream()
                 .filter(s -> !s.contains("package"))
-                .filter(s -> isLineKept(s , excludeImports))
+                .filter(s -> isImportKept(s , excludeImports))
+                .filter(s -> isLineKept(s , excludeLines))
                 .collect(Collectors.partitioningBy(s -> s.startsWith("import")));
     }
 
+    public static boolean isImportKept(String line, Set<String> excludeImports) {
+        if (excludeImports.isEmpty() || !line.startsWith("import")) { return true; }
+        for (String excludeImport: excludeImports) {
+            if (!excludeImport.isEmpty() && line.contains(excludeImport)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public static boolean isLineKept(String line, Set<String> excludeLines) {
+        if (excludeLines.isEmpty() || line.startsWith("import")) { return true; }
+        for (String excludeLine: excludeLines) {
+            if (!excludeLine.isEmpty() && line.contains(excludeLine)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 
-    public static boolean isLineKept(String line, String excludeImports) {
-        if (excludeImports.isEmpty()) { return true; }
-        return !line.contains(excludeImports);
-    } 
 
     // designe la main class ok
     // charge le contenu tous les fichiers en memoire ok
