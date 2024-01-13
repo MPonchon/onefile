@@ -11,6 +11,8 @@ import java.io.IOException;
 public class Main {
 
     private final static  String VERSION = "1.0.3";
+    public static int NB_PARAMS = 5;
+
     public static void main(String[] args) throws IOException {
         Launch launch = new Launch();
         if (!launch.checkParams(args)) {
@@ -27,7 +29,8 @@ public class Main {
                 .append("- nom de la mainclass: exemple MergeFiles").append("\n")
                 .append("- chemin absolu du dossier a scanner").append("\n")
                 .append("- les noms des imports a exclure exemple (org.yellowreindeer, ...)").append("\n")
-                .append("- chemin absolu du dossier cible").append("\n");
+                .append("- chemin absolu du dossier cible").append("\n")
+                .append("- les parties de lignes a exclure exemple (\"logger.debug, logger = new Logger\")").append("\n");
         System.out.println(sb);
     }
 
