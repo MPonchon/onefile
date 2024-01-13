@@ -28,7 +28,7 @@ class MainTest {
 
     @Test
     void getPomVersion_should_return_verion_in_pom() {
-        String expected = "1.0.2";
+        String expected = "1.0.3";
         assertEquals(expected, Main.getPomVersion());
     }
 }

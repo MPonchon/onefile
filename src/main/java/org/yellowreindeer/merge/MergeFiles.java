@@ -13,17 +13,19 @@ public class MergeFiles {
     public String pathRoot;
     public String mainClass;
     public String pathToWrite;
-    public String excludeImports;
+    public Set<String> excludeImports;
 
-    public static String REGEX_CLASS = " *public +(class|enum) +(\\w+<?\\w+,* *\\w*>?)( +.*)";
+    public static String REGEX_CLASS = " *public +(class|enum|interface) +(\\w+<?\\w+,* *\\w*>?)( +.*)";
 
     private List<Path> files;
 
-    public MergeFiles(String mainClass, String path, String excludeImports, String cheminCible) {
+    public MergeFiles(String mainClass, String path, String excludeImportsIn, String cheminCible) {
         this.mainClass  = mainClass ;
         this.pathRoot = path;
         pathToWrite = String.valueOf(Paths.get(cheminCible).resolve(this.mainClass  +".java"));
-        this.excludeImports = excludeImports;
+        this.excludeImports = new HashSet<>();
+        String[] excludes = excludeImportsIn.split(", *");
+        Collections.addAll(this.excludeImports, excludes);
     }
 
     public static String removePublic(String line, Pattern patternPublicClass) {
@@ -84,12 +86,15 @@ public class MergeFiles {
                 .collect(Collectors.partitioningBy(s -> s.startsWith("import")));
     }
 
-
-
-    public static boolean isLineKept(String line, String excludeImports) {
+    public static boolean isLineKept(String line, Set<String> excludeImports) {
         if (excludeImports.isEmpty()) { return true; }
-        return !line.contains(excludeImports);
-    } 
+        for (String excludeImport: excludeImports) {
+            if (!excludeImport.isEmpty() && line.contains(excludeImport)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     // designe la main class ok
     // charge le contenu tous les fichiers en memoire ok

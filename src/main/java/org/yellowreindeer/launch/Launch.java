@@ -29,6 +29,10 @@ public class Launch {
 
     public boolean checkParams(String[] args) {
         if (args.length != 4) {
+            System.err.println("Erreur: il n'y a que "+ args.length + " parametres:");
+            for(String param: args) {
+                System.err.println("- " + param);
+            }
             return false;
         }
         mainClass = args[0];

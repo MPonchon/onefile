@@ -10,14 +10,13 @@ import java.io.IOException;
 
 public class Main {
 
-    private final static  String VERSION = "1.0.2";
+    private final static  String VERSION = "1.0.3";
     public static void main(String[] args) throws IOException {
         Launch launch = new Launch();
         if (!launch.checkParams(args)) {
             usage();
             return;
         }
-//        launch.showParams();
         launch.run();
     }
 
@@ -27,7 +26,7 @@ public class Main {
                 .append("Arguments obligatoires:").append("\n")
                 .append("- nom de la mainclass: exemple MergeFiles").append("\n")
                 .append("- chemin absolu du dossier a scanner").append("\n")
-                .append("- le nom de l'import a exclure exemple (org.yellowreindeer)").append("\n")
+                .append("- les noms des imports a exclure exemple (org.yellowreindeer, ...)").append("\n")
                 .append("- chemin absolu du dossier cible").append("\n");
         System.out.println(sb);
     }

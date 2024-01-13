@@ -4,11 +4,13 @@ package org.yellowreindeer.merge;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MergeFilesTest {
 
@@ -26,9 +28,11 @@ class MergeFilesTest {
     @Test
     void dependenciesAndSourceCode_with_excludeImport_not_empty() {
         //Given
-        MergeFiles mf = new MergeFiles("MergeFiles", CHEMIN, "org.coding", CIBLE);
+        String excludes = "org.coding,org.yellow";
+        MergeFiles mf = new MergeFiles("MergeFiles", CHEMIN, excludes, CIBLE);
         List<String> lines = List.of(
                 "import org.coding.toto",
+                "import org.yellow.toto",
                 "package org.coding.mm",
                 "class Merge {",
                 "import java.util.*"
@@ -42,7 +46,7 @@ class MergeFilesTest {
     @Test
     void dependenciesAndSourceCode_with_excludeImport_Empty() {
         //Given
-        MergeFiles mf = new MergeFiles("MergeFiles", CHEMIN, "", CIBLE);
+        MergeFiles mf = new MergeFiles("MergeFiles", CHEMIN, ",", CIBLE);
         List<String> lines = List.of(
                 "import org.coding.toto",
                 "package org.coding.mm",
@@ -73,5 +77,25 @@ class MergeFilesTest {
         result = MergeFiles.removePublic(line, patternPublicClass);
         //Then
         assertEquals("class Toto<T , R>{", result);
+    }
+
+    @Test
+    void isLineKept_does_not_keep_exclude_import() {
+        // given
+        Set<String> excludes = Set.of("org.toto", "org.titi");
+        String line = "org.toto.voila";
+        //Then
+        assertFalse(MergeFiles.isLineKept(line, excludes));
+
+        // given
+        line = "org.titi.voila";
+        //Then
+        assertFalse(MergeFiles.isLineKept(line, excludes));
+
+        // given
+        line = "org.tata.voila";
+        //Then
+        assertTrue(MergeFiles.isLineKept(line, excludes));
+
     }
 }
